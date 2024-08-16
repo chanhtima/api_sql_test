@@ -9,7 +9,7 @@ exports.get = async (req, res) => {
       data: users,
     });
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: "Internal Server Error  user get all" });
   }
 };
 
