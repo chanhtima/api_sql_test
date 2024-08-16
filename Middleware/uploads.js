@@ -2,17 +2,17 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
-// Get the upload directory path from environment variables or default to a local path
-const uploadDir = process.env.UPLOAD_DIR || path.join(__dirname, "../tmp/uploads");
-
 // Configure storage
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    fs.access(uploadDir, (error) => {
-      if (error) {
-        fs.mkdir(uploadDir, { recursive: true }, (error) => cb(error, uploadDir));
+    const dir = path.resolve(__dirname, "../tmp/uploads"); // Use path.resolve for absolute path
+    fs.access(dir, fs.constants.F_OK, (err) => { // Use fs.access to check if directory exists
+      if (err) {
+        // Directory does not exist, create it
+        fs.mkdir(dir, { recursive: true }, (error) => cb(error, dir));
       } else {
-        cb(null, uploadDir);
+        // Directory exists
+        cb(null, dir);
       }
     });
   },
