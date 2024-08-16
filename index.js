@@ -1,6 +1,5 @@
 const express = require("express");
 const app = express();
-const port =  8000;
 const { readdirSync } = require('fs');
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -31,6 +30,6 @@ app.use((err, req, res, next) => {
 });
 
 // Start the server
-app.listen(port, () => {
-  console.log(`Server is Running on port: http://localhost:${port}`);
+app.listen(process.env.PORT, () => {
+  console.log(`Server is Running on port: http://localhost:${process.env.PORT}`);
 });
