@@ -7,6 +7,7 @@ const db = pgp({
     database: process.env.POSTGRES_DATABASE,
     user: process.env.POSTGRES_USER,
     password: process.env.POSTGRES_PASSWORD,
+    ssl: { rejectUnauthorized: false }
 });
 // const db = pgp({
 //     connectionString: process.env.POSTGRES_URL,
