@@ -10,8 +10,8 @@ const db = require('./config/db')
 app.use(cors());
 app.use(bodyParser.json({ limit: "10mb" }));
 app.use(express.json());
-app.use("/api/uploads", express.static("./tmp/uploads"));
-
+app.use("/api/uploads", express.static('uploads'));
+const port = process.env.PORT || 8000; 
 // MongoDB connection
 // connectDB();
 
@@ -30,6 +30,6 @@ app.use((err, req, res, next) => {
 });
 
 // Start the server
-app.listen(process.env.PORT, () => {
-  console.log(`Server is Running on port: http://localhost:${process.env.PORT}`);
+app.listen(port, () => {
+  console.log(`Server is Running on port: http://localhost:${port}`);
 });
