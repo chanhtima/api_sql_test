@@ -5,7 +5,7 @@ const fs = require("fs");
 // Configure storage
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const dir = path.join(__dirname, "../public/uploads");
+    const dir = path.join(__dirname, "./public/uploads");
     fs.exists(dir, (exist) => {
       if (!exist) {
         fs.mkdir(dir, { recursive: true }, (error) => cb(error, dir));
