@@ -3,7 +3,7 @@ const path = require("path");
 const fs = require("fs");
 
 // Get the upload directory path from environment variables or default to a local path
-const uploadDir = process.env.UPLOAD_DIR || path.join(__dirname, "../public/uploads");
+const uploadDir = process.env.UPLOAD_DIR || path.join(__dirname, "../tmp/uploads");
 
 // Configure storage
 const storage = multer.diskStorage({
