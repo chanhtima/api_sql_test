@@ -5,11 +5,13 @@ const fs = require("fs");
 // Configure storage
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const dir = path.join(__dirname, "./public/uploads");
-    fs.exists(dir, (exist) => {
-      if (!exist) {
+    const dir = path.resolve(__dirname, "../public/uploads"); // Use path.resolve for absolute path
+    fs.access(dir, fs.constants.F_OK, (err) => { // Use fs.access to check if directory exists
+      if (err) {
+        // Directory does not exist, create it
         fs.mkdir(dir, { recursive: true }, (error) => cb(error, dir));
       } else {
+        // Directory exists
         cb(null, dir);
       }
     });
