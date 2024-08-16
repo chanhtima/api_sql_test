@@ -9,8 +9,12 @@ require('dotenv').config();
 //     password: process.env.DB_PASSWORD,
 // });
 const db = pgp({
-   connectionString: process.env.POSTGRES_URL + "?sslmode=require",
-});
+    connectionString: process.env.POSTGRES_URL,
+    ssl: {
+      rejectUnauthorized: false
+    }
+  });
+  
 db.connect()
     .then(() => {
         console.log("Database connected successfully");
