@@ -1,6 +1,6 @@
 const db = require("../config/db");
 const productModel = require("../Models/product.model");
-const uploadModel = require('../Models/upload.model')
+const uploadModel = require("../Models/upload.model");
 exports.createProduct = async (req, res) => {
   try {
     const { name, description, price } = req.body;
@@ -36,7 +36,59 @@ exports.createProduct = async (req, res) => {
 };
 
 exports.getAll = async (req, res) => {
-  res.json({
-    message: "successfully",
-  });
+  try {
+    const { name = "", limit = 10, offset = 0 } = req.query;
+    const { products, total } = await productModel.getAll(
+      name,
+      parseInt(limit),
+      parseInt(offset)
+    );
+    const productWithImages = await Promise.all(
+      products.map(async (product) => {
+        if (product.upload_id) {
+          const image = await uploadModel.uploadGet(product.upload_id);
+          return {
+            ...product,
+            imageUrl: image.url,
+          };
+        }
+        return product;
+      })
+    );
+
+    res.status(200).json({
+      success: true,
+      total,
+      data: {
+        ProductData: productWithImages,
+      },
+    });
+  } catch (error) {
+    console.error("Error getting products:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+exports.getByIG = async (req, res) => {
+  try {
+    const product = await productModel.getById(req.params.id);
+    if (product) {
+      // console.log("product",product);
+      res.status(200).json({
+        success: true,
+        data: product,
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        message: "product not found",
+      });
+    }
+  } catch (error) {
+    console.error("Error retrieving user:", error); 
+    res.status(500).json({
+      success: false,
+      error: "Internal Server Error",
+    });
+  }
 };

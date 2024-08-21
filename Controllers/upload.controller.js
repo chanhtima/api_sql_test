@@ -19,7 +19,7 @@ exports.postUpload = async (req, res) => {
 
 exports.getById = async (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params; // Ensure this is the UUID, not a filename
     const result = await uploadModel.uploadGet(id);
     res.status(200).json({
       message: "File retrieved successfully!",
