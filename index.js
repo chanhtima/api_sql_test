@@ -10,7 +10,7 @@ const db = require('./config/db')
 app.use(cors());
 app.use(bodyParser.json({ limit: "10mb" }));
 app.use(express.json());
-app.use("/api/uploads", express.static('uploads'));
+app.use("/api/uploads", express.static('./public/uploads'));
 const port = process.env.PORT || 8000; 
 // MongoDB connection
 // connectDB();

@@ -12,4 +12,4 @@ route.put('/users/update/:id',updatedUser)
 
 
 
-module.exports = route
+module.exports = route;

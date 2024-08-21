@@ -1,13 +1,9 @@
 const db = require("../config/db");
-
+const uploadModel = require("../Models/upload.model");
 exports.postUpload = async (req, res) => {
   try {
     const { filename, mimetype, size } = req.file;
-    const url = `/uploads/${filename}`;
-    const result = await db.query(
-      "INSERT INTO uploads (filename, mimetype, size, upload_date, url) VALUES ($1, $2, $3, NOW(), $4) RETURNING *",
-      [filename, mimetype, size, url]
-    );
+    const result = await uploadModel.uploadPost(filename, mimetype, size);
     res.status(201).json({
       message: "File uploaded successfully!",
       file: result,
@@ -23,8 +19,8 @@ exports.postUpload = async (req, res) => {
 
 exports.getById = async (req, res) => {
   try {
-    const { id } = req.params; 
-    const result = await db.one("SELECT * FROM uploads WHERE id = $1", [id]);
+    const { id } = req.params;
+    const result = await uploadModel.uploadGet(id);
     res.status(200).json({
       message: "File retrieved successfully!",
       url: result.url,
