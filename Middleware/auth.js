@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
 const verifToken = (req, res, next) => {
   const token = req.headers.authorization;
@@ -6,13 +7,17 @@ const verifToken = (req, res, next) => {
     return res.status(401).json("Token missing.");
   }
   const tokenWithoutBearer = token.split(" ")[1];
-  jwt.verify(tokenWithoutBearer, process.env.JWT_SECRET_KEY, (err, payload) => {
-    if (err) {
-      return res.status(401).json("Token is invalid");
+  jwt.verify(
+    tokenWithoutBearer,
+    process.env.ACCESS_TOKEN_SECRET,
+    (err, payload) => {
+      if (err) {
+        return res.status(401).json("Token is invalid");
+      }
+      req.user = payload;
+      next();
     }
-    req.user = payload;
-    next();
-  });
+  );
 };
 
 module.exports = verifToken;
