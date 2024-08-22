@@ -72,10 +72,22 @@ const update = async (id, name, description, price, upload_id) => {
 
   return result;
 };
-
+const deleteModel = async(id)=>{
+  try {
+  const result =await db.oneOrNone(
+    "DELETE FROM products WHERE id = $1 RETURNING *",
+    [id]
+  )
+  return result;
+} catch (error) {
+  throw new Error("Database Error: " + error.message);
+}
+}
+ 
 module.exports = {
   ProductPost,
   getAll,
   getById,
   update,
+  deleteModel
 };

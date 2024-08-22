@@ -1,13 +1,12 @@
-const db = require("../config/db");
 const productModel = require("../Models/product.model");
 const uploadModel = require("../Models/upload.model");
 exports.createProduct = async (req, res) => {
   try {
     const { name, description, price } = req.body;
-    console.log("name",name);
-    console.log("description",description);
-    console.log("price",price);
-    
+    console.log("name", name);
+    console.log("description", description);
+    console.log("price", price);
+
     let upload_id = null;
     if (req.file) {
       const { filename, mimetype, size } = req.file;
@@ -135,5 +134,28 @@ exports.update = async (req, res) => {
       message: "Failed to update product.",
       error: error.message,
     });
+  }
+};
+
+exports.DeleteController = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const deleteId = await productModel.deleteModel(id);
+    if (deleteId) {
+      res.status(200).json({
+        success: true,
+        message: "Delete Data successfully",
+      });
+    } else {
+      res.status(404).json({
+        success: false,
+        message: "id not found",
+      });
+    }
+  } catch (error) {
+    console.error("Error deleting user:", error); 
+    res
+      .status(500)
+      .json({ error: "Internal Server Error", message: error.message });
   }
 };
