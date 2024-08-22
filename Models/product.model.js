@@ -32,9 +32,50 @@ const getById = async (id) => {
   // console.log("result",result)
   return result;
 };
+const update = async (id, name, description, price, upload_id) => {
+  if (!id) {
+    throw new Error("ID is required to update the product");
+  }
+
+  // Start constructing the SQL query
+  let query = "UPDATE products SET";
+  const params = [id];
+  let paramIndex = 2;
+
+  // Add columns only if their values are provided
+  if (name !== undefined) {
+    query += ` name = $${paramIndex++},`;
+    params.push(name);
+  }
+  if (description !== undefined) {
+    query += ` description = $${paramIndex++},`;
+    params.push(description);
+  }
+  if (price !== undefined) {
+    query += ` price = $${paramIndex++},`;
+    params.push(price);
+  }
+  if (upload_id !== undefined) {
+    query += ` upload_id = $${paramIndex++},`;
+    params.push(upload_id);
+  }
+
+  // Remove trailing comma and add WHERE clause
+  query = query.slice(0, -1) + ` WHERE id = $1 RETURNING *`;
+
+  // Execute the query
+  const result = await db.oneOrNone(query, params);
+
+  if (!result) {
+    throw new Error("Product not found or no data updated");
+  }
+
+  return result;
+};
 
 module.exports = {
   ProductPost,
   getAll,
   getById,
+  update,
 };

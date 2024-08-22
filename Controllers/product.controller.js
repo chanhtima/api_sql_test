@@ -4,6 +4,10 @@ const uploadModel = require("../Models/upload.model");
 exports.createProduct = async (req, res) => {
   try {
     const { name, description, price } = req.body;
+    console.log("name",name);
+    console.log("description",description);
+    console.log("price",price);
+    
     let upload_id = null;
     if (req.file) {
       const { filename, mimetype, size } = req.file;
@@ -85,10 +89,51 @@ exports.getByIG = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error("Error retrieving user:", error); 
+    console.error("Error retrieving user:", error);
     res.status(500).json({
       success: false,
       error: "Internal Server Error",
+    });
+  }
+};
+exports.update = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({
+        message: "Product ID is required.",
+      });
+    }
+
+    const { name, description, price, upload_id } = req.body;
+
+    if (req.file) {
+      const { filename, mimetype, size } = req.file;
+      const uploadResult = await uploadModel.uploadPostId(
+        filename,
+        mimetype,
+        size
+      );
+      upload_id = uploadResult;
+    }
+
+    const result = await productModel.update(
+      id,
+      name,
+      description,
+      price,
+      upload_id
+    );
+
+    res.status(200).json({
+      message: "Product updated successfully!",
+      product: result,
+    });
+  } catch (error) {
+    console.error("Error updating product:", error);
+    res.status(500).json({
+      message: "Failed to update product.",
+      error: error.message,
     });
   }
 };
